@@ -3,8 +3,12 @@ import { withAuthorization } from "../Session";
 
 const HomePage = () => (
   <div>
-    <h1>Home Page</h1>
-    <p>The Home Page is accessible by every signed in user.</p>
+    <h1 style={{ fontFamily: "Pacifico" }} className="lead">
+      Home Page
+    </h1>
+    <p style={{ fontFamily: "Pacifico" }} className="lead">
+      The Home Page is accessible by every signed in user.
+    </p>
   </div>
 );
 

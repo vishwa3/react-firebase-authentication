@@ -14,11 +14,6 @@ const AccountPage = () => (
       </div>
     )}
   </AuthUserContext.Consumer>
-  /*  <div>
-    <h1>Account Page</h1>
-    <PasswordForgetForm />
-    <PasswordChangeForm />
-  </div> */
 );
 
 const condition = authUser => !!authUser;

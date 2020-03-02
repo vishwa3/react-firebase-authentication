@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 
 import Navigation from "../Navigation";
@@ -13,6 +13,19 @@ import AdminPage from "../Admin";
 import * as ROUTES from "../../constants/routes";
 import { AuthUserContext } from "../Session";
 import { withAuthentication } from "../Session";
+import LogInPage from "../Login";
+import Header from "../Header/Header";
+
+const App = () => (
+  <div>
+    <h1 style={{ fontFamily: "Pacifico" }} className="lead">
+      Welcome to Firebase-React Authentication
+    </h1>
+    <LogInPage />
+  </div>
+);
+
+export default withAuthentication(App);
 
 /* class App extends React.Component {
   constructor(props) {
@@ -61,23 +74,3 @@ import { withAuthentication } from "../Session";
 }
 
 export default withFirebase(App); */
-
-const App = () => (
-  <Router>
-    <div>
-      <Navigation />
-
-      <hr />
-
-      <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-      <Route path={ROUTES.HOME} component={HomePage} />
-      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-      <Route path={ROUTES.ADMIN} component={AdminPage} />
-    </div>
-  </Router>
-);
-
-export default withAuthentication(App);

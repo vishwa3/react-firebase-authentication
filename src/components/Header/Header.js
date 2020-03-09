@@ -3,27 +3,31 @@ import { Link, NavLink } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import SignOutButton from "../SignOut";
 import { AuthUserContext } from "../Session";
+import * as ROLES from "../../constants/roles";
 
 const Header = () => {
   return (
     <div>
       <AuthUserContext.Consumer>
-        {authUser => (authUser ? <HeaderAuth /> : <HeaderNonAuth />)}
+        {authUser =>
+          authUser ? <HeaderAuth authUser={authUser} /> : <HeaderNonAuth />
+        }
       </AuthUserContext.Consumer>
     </div>
   );
 };
 
-const HeaderAuth = () => {
-  console.log("HeaderAuth");
+const HeaderAuth = ({ authUser }) => {
   return (
     <div className="text-center">
       <nav className="navbar navbar-default space">
         <div className="collapse navbar-collapse">
           <ul className="nav navbar-nav">
-            <li className="nav-item">
-              <Link to={ROUTES.ADMIN}>ADMIN</Link>
-            </li>
+            {!!authUser.roles[ROLES.ADMIN] && (
+              <li className="nav-item">
+                <Link to={ROUTES.ADMIN}>ADMIN</Link>
+              </li>
+            )}
 
             <li>
               <Link to={ROUTES.HOME}>Home</Link>
@@ -39,7 +43,6 @@ const HeaderAuth = () => {
 };
 
 const HeaderNonAuth = () => {
-  console.log("HeaderNonAuth");
   return (
     <div className="text-center">
       <nav className="navbar navbar-default space">

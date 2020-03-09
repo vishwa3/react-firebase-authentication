@@ -5,6 +5,7 @@ import { FirebaseContext } from "../Firebase";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import "../../styles/style.css";
+import * as ROLES from "../../constants/roles";
 const SignUpPage = () => (
   <div>
     <SignUpForm />
@@ -16,6 +17,7 @@ const INITIAL_STATE = {
   email: "",
   passwordOne: "",
   passwordTwo: "",
+  isAdmin: false,
   error: null
 };
 
@@ -27,13 +29,19 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { username, email, passwordOne } = this.state;
+    const { username, email, passwordOne, isAdmin } = this.state;
+    const roles = {};
+    if (isAdmin) {
+      roles[ROLES.ADMIN] = ROLES.ADMIN;
+      console.log("roles", roles);
+    }
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
+        // Create a user in your Firebase realtime database
         return this.props.firebase
           .user(authUser.user.uid)
-          .set({ username, email, passwordOne });
+          .set({ username, email, roles });
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
@@ -48,8 +56,19 @@ class SignUpFormBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  onChangeCheckbox = event => {
+    this.setState({ [event.target.name]: event.target.checked });
+  };
+
   render() {
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
+    const {
+      username,
+      email,
+      passwordOne,
+      passwordTwo,
+      isAdmin,
+      error
+    } = this.state;
 
     const isInvalid =
       passwordOne !== passwordTwo ||
@@ -58,7 +77,7 @@ class SignUpFormBase extends Component {
       username === "";
 
     return (
-      <div className="loginbox" style={{ height: 500 }}>
+      <div className="loginbox" style={{ height: 535 }}>
         <img src={require("./avatar.png")} className="avatar"></img>
         <h1>Sign-up Form</h1>
         <form onSubmit={this.onSubmit}>
@@ -94,9 +113,23 @@ class SignUpFormBase extends Component {
             type="password"
             placeholder="Confirm Password"
           />
-          <button disabled={isInvalid} type="submit">
-            Sign Up
-          </button>
+          <div>
+            <label>
+              <input
+                name="isAdmin"
+                id="admin"
+                type="checkbox"
+                checked={isAdmin}
+                onChange={this.onChangeCheckbox}
+              />
+              _Tick if you need Admin Role
+            </label>
+          </div>
+          <div style={{ paddingTop: 15 }}>
+            <button disabled={isInvalid} type="submit">
+              Sign Up
+            </button>
+          </div>
 
           {error && <p>{error.message}</p>}
         </form>
